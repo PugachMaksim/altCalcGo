@@ -177,8 +177,12 @@ func main(){
 				num1, err := strconv.Unquote(nummms[0])
 				if err != nil{
 					panic("Ошибка ввода")
-				}				
-				fmt.Println(strconv.Quote(strings.Repeat(num1, num2)))
+				}
+				res := strings.Repeat(num1, num2)
+				if utf8.RuneCountInString(res) > 40{
+					fmt.Println(strconv.Quote(res[:40] + "..."))
+				}else {
+					fmt.Println(strconv.Quote(res))}
 
 			}else if strings.Contains(text, " / "){
 				nummms := strings.Split(text, " / ")
