@@ -49,32 +49,37 @@ func main(){
 	// fmt.Println(text)
 
 
-	
+	fmt.Print("Введите выражеие: ")
 	text, _ := bufio.NewReader(os.Stdin).ReadString('\n')  // прием строки полностью, с пробелами
 	text = strings.TrimSpace(text)
 
-	// splitFunc := func(r rune) bool {
-	// 	return strings.ContainsRune("*%,/%,+", r)
-	// }
-	// nums := strings.FieldsFunc(text, splitFunc)
-	// _ = nums
-	//nummms_2 := strings.SplitN(text, " - ", 2 )
 
-	// fmt.Println(nummms_2)
-	// fmt.Println(len(nummms_2))
-	// for i := 0; i < len(nummms_2); i++{
-	// 	fmt.Println(nummms_2[i])
-	// }
 	//s := len(text)
-	//fmt.Println(utf8.RuneCountInString(text))      //узнать длину строки 
 
+
+	//fmt.Println(utf8.RuneCountInString(text))      //узнать длину строки 
 	//value = strconv.Quote(value)				    //поместить текст в ковычки
-	// stringss = append(stringss, num2)    не нужно!!!!
 	// nummms := strings.Split(text, " ")           //Разбить по пробелам, нам не подошло
 
 		if strings.Contains(text, " + ") || strings.Contains(text, " - ") || strings.Contains(text, " / ") || strings.Contains(text, " * "){
 			if strings.Contains(text, "+"){
-				nummms := strings.Split(text, " + ")
+				amount(text)
+			}else if strings.Contains(text, "-"){
+				difference(text)
+				
+			}else if strings.Contains(text, " * "){
+				multiply(text)
+
+			}else if strings.Contains(text, " / "){
+				share(text)
+			}
+		}else {
+				panic("не верный ввод")
+			}
+	} 
+
+	func amount(text string) {
+		nummms := strings.Split(text, " + ")
 				if len(nummms) != 2 {
 					panic("Ошибка")
 				}
@@ -83,29 +88,22 @@ func main(){
 					panic("Первое не может быть число")
 				}
 				_ = n1
-				//stringss := []string{}
-				t1 := strings.TrimSpace(nummms[0])
-				nummms[0] = t1
-
 				n2, err := strconv.Atoi(nummms[1])
 				if err == nil{
 					panic("складывать строки с числами нельзя")
 				}
 				_ = n2
-
+				if utf8.RuneCountInString(nummms[0]) > 12{
+					panic("Слишком длинная строка!!!")
+				}
+				if utf8.RuneCountInString(nummms[1]) > 12{
+						panic("Слишком длинная строка!!!")
+				} 
+				t1 := strings.TrimSpace(nummms[0])
+				nummms[0] = t1
 				t2 := strings.TrimSuffix(nummms[1], "\r\n")      //убрать "\r\n"
 				t2 = strings.TrimSpace(t2)          		     //убрать пробелы
-
-				if len(nummms) == 2{
-					fmt.Println(utf8.RuneCountInString(t1))
-					fmt.Println(utf8.RuneCountInString(t2))
-					if utf8.RuneCountInString(t1) > 12{
-						panic("Слишком длинная строка!!!")
-					}
-					if utf8.RuneCountInString(nummms[1]) > 12{
-							panic("Слишком длинная строка!!!")
-					} 
-					num1, err := strconv.Unquote(t2)
+				num1, err := strconv.Unquote(t1)
 					if err != nil{
 						panic("Ошибка ввода")
 					}
@@ -115,11 +113,10 @@ func main(){
 					}				
 					res := num1 + num2
 					fmt.Println(strconv.Quote(res))
-				} else {
-					panic("Не верное выражение")
 				}
-			}else if strings.Contains(text, "-"){
-				nummms := strings.Split(text, " - ")
+	
+	func difference(text string)  {
+		nummms := strings.Split(text, " - ")
 				if len(nummms) != 2 {
 					panic("Ошибка ввода")
 				}
@@ -153,9 +150,10 @@ func main(){
 				}	
 				res := strings.TrimSuffix(num1, num2)
 				fmt.Println(strconv.Quote(res))
-				
-			}else if strings.Contains(text, " * "){
-				nummms := strings.Split(text, " * ")
+	}
+
+	func multiply(text string)  {
+		nummms := strings.Split(text, " * ")
 				if len(nummms) != 2 {
 					panic("Ошибка ввода")
 				}
@@ -167,6 +165,9 @@ func main(){
 				num2, err := strconv.Atoi(nummms[1])
 				if err != nil{
 					panic("умножать на строку нельзя")
+				}
+				if num2 > 10 || num2 < 1{
+					panic("принимается число от 1 до 10 включительно")
 				}
 				if utf8.RuneCountInString(nummms[0]) > 12{
 					panic("Слишком длинная строка!!!")
@@ -183,9 +184,10 @@ func main(){
 					fmt.Println(strconv.Quote(res[:40] + "..."))
 				}else {
 					fmt.Println(strconv.Quote(res))}
+	}
 
-			}else if strings.Contains(text, " / "){
-				nummms := strings.Split(text, " / ")
+	func share(text string)  {
+		nummms := strings.Split(text, " / ")
 				if len(nummms) != 2 {
 					panic("Ошибка ввода")
 				}
@@ -193,15 +195,13 @@ func main(){
 				if err != nil{
 					panic("делить на строку нельзя")
 				}
-
+				if num2 > 10 || num2 < 1{
+					panic("принимается число от 1 до 10 включительно")
+				}
 				num1, err := strconv.Unquote(nummms[0])
 				if err != nil{
 					panic("Первое не может быть число")
 				}				
 				numLen := len(num1)/num2
 				fmt.Println(strconv.Quote(num1[:numLen]))
-			}
-		}else {
-				panic("не верный ввод")
-			}
-	} 
+	}
