@@ -148,7 +148,8 @@ func main(){
 				if err != nil{
 					panic("Ошибка ввода")
 				}	
-				res := strings.TrimSuffix(num1, num2)
+				res := strings.Trim(num1, num2)
+				// res := strings.TrimSuffix(num1, num2)
 				fmt.Println(strconv.Quote(res))
 	}
 
